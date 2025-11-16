@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reverse Engineering & Decryption Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #16161f;
+            --accent: #6366f1;
+            --accent-2: #8b5cf6;
+            --text: #e8e8f0;
+            --text-dim: #9ca3af;
+            --border: rgba(99, 102, 241, 0.15);
+            --success: #10b981;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            padding: 3rem 0 2rem;
+        }
+
+        .hero {
+            padding: 2rem 0 1.5rem;
+        }
+
+        .hero-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-dim);
+            margin-bottom: 1.3rem;
+            margin-top: 0.5rem;
+        }
+
+        .note-box {
+            padding: 1.4rem 1.8rem;
+            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            margin-top: 1rem;
+        }
+
+        .note-box p {
+            color: var(--text);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        main { padding: 1rem 0; }
+
+        .section { margin-bottom: 3rem; }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.8rem;
+            transition: 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-icon i {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .service-card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .contact-section {
+            margin-top: 1rem;
+        }
+
+        .contact-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2.2rem;
+            max-width: 480px;
+            margin: 0 auto;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .contact-title {
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+        }
+
+        .contact-description {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-content p {
+            margin-bottom: 2rem;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .contact-btn {
+            width: 60px;
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+            border: 2px solid var(--border);
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+            padding: 0;
+        }
+
+        .contact-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 50%;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            border-color: var(--accent);
+        }
+
+        .contact-btn:hover::before {
+            opacity: 0.2;
+        }
+
+        .contact-btn i {
+            font-size: 1.7rem;
+            color: white;
+            z-index: 1;
+            position: relative;
+            transition: color 0.4s ease;
+        }
+
+        .contact-btn:hover i {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        @media(max-width: 768px) {
+            h1 { font-size: 2.6rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="hero">
+            <div class="hero-header">
+                <h1>Muhammad <span class="gradient-text">Hridoy</span></h1>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>Available for Projects</span>
+                </div>
+            </div>
+            <p class="subtitle">Reverse Engineering, Decryption & Software Analysis</p>
+            <div class="note-box">
+                <p>I analyze encrypted files, protected software and obfuscated code. My work includes debugging Python, C and C++ applications along with binary inspection and script de-obfuscation. I offer this at no cost for people with legitimate access needs.</p>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="section">
+            <h2 class="section-title">Services</h2>
+            <p class="section-subtitle">Reverse engineering and analysis for Python, C, C++ and binaries</p>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Binary Analysis</h3>
+                    <p>Static and dynamic inspection of compiled executables to understand behavior and structure.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-lock-open"></i>
+                    </div>
+                    <h3>File Decryption</h3>
+                    <p>Help restoring access to encrypted files and locked documents.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Decompilation</h3>
+                    <p>Recover readable source from machine code for review or debugging.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-file-code"></i>
+                    </div>
+                    <h3>Script Decoding</h3>
+                    <p>Decode obfuscated logic in Python and shell scripts.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>App Debugging (Python / C / C++)</h3>
+                    <p>Breakdown, troubleshoot and trace issues in compiled or interpreted applications.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3>Malware Analysis</h3>
+                    <p>Analyze suspicious files to identify capabilities and risks.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section contact-section">
+            <div class="section-header">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Contact me to discuss your reverse engineering or decryption requirements</p>
+            </div>
+            <div class="contact-card">
+                <div class="contact-content">
+                    <h3>Professional Consultation</h3>
+                    <p>Reach out for assistance with encrypted files, protected software, or complex reverse engineering challenges. I provide detailed analysis and effective solutions.</p>
+                    <div class="contact-links">
+                        <a href="https://discord.com/users/invincible_core" class="contact-btn" target="_blank" onclick="delayRedirect(this.href)">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                        <a href="https://facebook.com/deobfuscate" class="contact-btn" target="_blank" onclick="delayRedirect(this.href)">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://instagram.com/invincible_core" class="contact-btn" target="_blank" onclick="delayRedirect(this.href)">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="mailto:klein.decrypt@gmail.com" class="contact-btn" onclick="delayRedirect(this.href)">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2025 Muhammad Hridoy — Reverse Engineering & Software Analysis
+    </footer>
+</div>
+
+<script>
+    function delayRedirect(url) {
+        event.preventDefault();
+        setTimeout(() => {
+            window.location.href = url;
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
