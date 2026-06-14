@@ -407,7 +407,7 @@
       </p>
       <span class="avail reveal" style="transition-delay: 0.15s">
         <span class="avail-dot"></span>
-        <span id="avail-text">currently available for execution</span>
+        <span id="avail-text">currently available for projects</span>
       </span>
     </header>
 
@@ -573,7 +573,7 @@
     document.getElementById('footer-year').textContent =
       '© ' + new Date().getFullYear() + ' · Reverse Engineering & Analysis';
 
-    var isAvailable = false;
+    var isAvailable = true;
     var availBadge  = document.querySelector('.avail');
     var availLabel  = document.getElementById('avail-text');
 
