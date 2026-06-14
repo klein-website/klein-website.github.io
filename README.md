@@ -31,3 +31,7 @@ No frameworks. No dependencies. No build step.
 - Font load fade-in to prevent flash on open
 
 ---
+
+## License
+
+Registered under [MIT](LICENSE) so do whatever you want, just don't remove the attribution.
