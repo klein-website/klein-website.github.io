@@ -229,6 +229,14 @@
       color: var(--red);
     }
 
+    .svc-tags {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+
     .tools-section {
       border-bottom: 1px solid var(--line);
       padding-bottom: 2.5rem;
@@ -428,6 +436,7 @@
 
     <div class="svc reveal">
       <p class="svc-title">Binary Analysis</p>
+      <p class="svc-tags">.exe .dll .bin</p>
       <p class="contact-lead">
         I pull compiled executables apart and read them like a book. Every routine, every hidden call,
         every behavior the developer hoped you would never find.
@@ -436,6 +445,7 @@
 
     <div class="svc reveal">
       <p class="svc-title">File Decryption</p>
+      <p class="svc-tags">.aes .rsa .enc</p>
       <p class="contact-lead">
         Encryption is just math with a key somewhere. I find the key, trace the algorithm,
         and get your data back out clean.
@@ -444,6 +454,7 @@
 
     <div class="svc reveal">
       <p class="svc-title">Decompilation</p>
+      <p class="svc-tags">.pyc .class .so</p>
       <p class="contact-lead">
         Recovering readable logic from machine code, bytecode and compiled applications. The result is not always the original source,
         but usually enough to understand, audit or reproduce the program.
@@ -452,6 +463,7 @@
 
     <div class="svc reveal">
       <p class="svc-title">Script Decoding</p>
+      <p class="svc-tags">.b64 .eval .obf</p>
       <p class="contact-lead">
         Ten layers of base64 and a dozen eval calls is still just code. I unpack it all the way down
         until you can see exactly what it was trying to do.
@@ -460,6 +472,7 @@
 
     <div class="svc reveal">
       <p class="svc-title">Malware Analysis</p>
+      <p class="svc-tags">.exe .dll .sys</p>
       <p class="contact-lead">
         I run it in isolation, watch every move it makes, map every system call and network reach,
         and tell you exactly how dangerous it is.
