@@ -53,13 +53,55 @@
       transition: opacity 0.4s ease;
     }
 
-    body::before {
-      content: '';
+    .orb {
       position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      border-radius: 50%;
       pointer-events: none;
       z-index: 0;
+      filter: blur(72px);
+      will-change: transform;
+    }
+
+    .orb-1 {
+      width: 65vw;
+      height: 65vw;
+      top: -25vw;
+      left: -15vw;
+      background: radial-gradient(circle, #e8e0d2 0%, transparent 70%);
+      animation: aura1 18s ease-in-out infinite alternate;
+    }
+
+    .orb-2 {
+      width: 55vw;
+      height: 55vw;
+      top: 10vh;
+      right: -10vw;
+      background: radial-gradient(circle, #ede6d8 0%, transparent 70%);
+      animation: aura2 22s ease-in-out infinite alternate;
+    }
+
+    .orb-3 {
+      width: 45vw;
+      height: 45vw;
+      bottom: -15vw;
+      left: 25vw;
+      background: radial-gradient(circle, #e6ddd0 0%, transparent 70%);
+      animation: aura3 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes aura1 {
+      0%   { transform: translate(0, 0)     scale(1);    }
+      100% { transform: translate(8%, 12%)  scale(1.12); }
+    }
+
+    @keyframes aura2 {
+      0%   { transform: translate(0, 0)      scale(1);    }
+      100% { transform: translate(-10%, -8%) scale(0.92); }
+    }
+
+    @keyframes aura3 {
+      0%   { transform: translate(0, 0)    scale(1);    }
+      100% { transform: translate(5%, -15%) scale(1.18); }
     }
 
     .wrap {
@@ -403,6 +445,10 @@
   </style>
 </head>
 <body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
   <div class="wrap">
 
