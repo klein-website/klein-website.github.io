@@ -29,6 +29,9 @@ No frameworks. No dependencies. No build step.
 - Tool tags link to official GitHub repos
 - Status badge toggle for available or away
 - Font load fade-in to prevent flash on open
+- Time-based greeting using visitor's detected timezone
+- Aurora bleed background with three animated orbs
+- Copy, right-click, and devtools protection
 
 ---
 
