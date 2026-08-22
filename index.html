@@ -796,6 +796,38 @@
       }
     });
 
+    function decryptText(el) {
+      if (el.dataset.decrypting === 'true') return;
+      if (!el.dataset.original) {
+        el.dataset.original = el.textContent;
+      }
+      var target = el.dataset.original;
+      var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      var frame = 0;
+      var revealed = 0;
+      el.dataset.decrypting = 'true';
+      function tick() {
+        var out = '';
+        for (var i = 0; i < target.length; i++) {
+          if (i < revealed || target[i] === ' ') {
+            out += target[i];
+          } else {
+            out += chars[Math.floor(Math.random() * chars.length)];
+          }
+        }
+        el.textContent = out;
+        frame++;
+        if (frame % 3 === 0) revealed++;
+        if (revealed <= target.length) {
+          requestAnimationFrame(tick);
+        } else {
+          el.textContent = target;
+          el.dataset.decrypting = 'false';
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
     var revealEls = document.querySelectorAll('.reveal');
 
     var scrollObserver = new IntersectionObserver(function (entries) {
@@ -804,6 +836,8 @@
         if (entry.isIntersecting) {
           el.classList.remove('hide-up');
           el.classList.add('visible');
+          var tagsEl = el.querySelector('.svc-tags');
+          if (tagsEl) decryptText(tagsEl);
         } else {
           el.classList.remove('visible');
           if (entry.boundingClientRect.top < 0) {
@@ -813,7 +847,7 @@
           }
         }
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+    }, { threshold: 0.4, rootMargin: '0px 0px -12% 0px' });
 
     revealEls.forEach(function (element) {
       scrollObserver.observe(element);
