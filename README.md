@@ -6,24 +6,23 @@
 
 ---
 
-## What is this?
+## About
 
-A single-page portfolio site built in plain HTML and CSS.
-No frameworks. No dependencies. No build step.
+A single-page portfolio site in plain HTML, CSS and vanilla JavaScript.
+No frameworks, no dependencies, no build step.
 
 ## Stack
 
-- HTML / CSS / Vanilla JS
-- Fonts used Cormorant Garamond, Inter, JetBrains Mono via Google Fonts
+- HTML / CSS / JavaScript
+- Cormorant Garamond, Inter and JetBrains Mono via Google Fonts
 
 ## Features
 
-- BTC address tap-to-copy
-- Auto-updating copyright year
-- Fully responsive on mobile and desktop
-- Tool tags link to official GitHub repos
-- Smooth two-way scroll reveal animations
-- Status badge toggle for available or away
+- Responsive on mobile and desktop
+- Subtle scroll animations that respect reduced motion settings
+- Live online / offline status with an uptime counter
+- Tool tags linking to official project pages
+- Tap-to-copy BTC address
 - Font load fade-in to prevent flash on open
 
 ## License
