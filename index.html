@@ -34,6 +34,7 @@
 
       --ease-out:       cubic-bezier(0.22, 0.61, 0.36, 1);
       --ease-expo:      cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-ios:       cubic-bezier(0.32, 0.72, 0, 1);
     }
 
     html {
@@ -51,6 +52,7 @@
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .orb {
@@ -119,10 +121,7 @@
       }
 
       .orb-3 {
-        width: 110vw;
-        height: 110vw;
-        bottom: -30vw;
-        left: -10vw;
+        display: none;
       }
     }
 
@@ -131,6 +130,11 @@
         animation: none;
         will-change: auto;
       }
+    }
+
+    body.is-paused .orb,
+    body.is-paused .status-dot::after {
+      animation-play-state: paused;
     }
 
     .wrap {
@@ -167,7 +171,7 @@
 
     .reveal {
       opacity: 0;
-      transform: translateY(18px);
+      transform: translateY(12px);
       transition:
         opacity   0.3s ease,
         transform 0.3s ease;
@@ -177,13 +181,13 @@
       opacity: 1;
       transform: translateY(0);
       transition:
-        opacity   0.8s var(--ease-out)  var(--d, 0s),
-        transform 0.9s var(--ease-expo) var(--d, 0s);
+        opacity   0.7s var(--ease-out) var(--d, 0s),
+        transform 0.85s var(--ease-ios) var(--d, 0s);
     }
 
     .reveal.hide-up {
       opacity: 0;
-      transform: translateY(-12px);
+      transform: translateY(-8px);
     }
 
     header {
@@ -283,18 +287,28 @@
     }
 
     .status-dot {
+      position: relative;
       width: 6px;
       height: 6px;
       flex-shrink: 0;
       border-radius: 50%;
       background: var(--status-color);
+    }
+
+    .status-dot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--status-color);
+      opacity: 0;
       animation: status-ping 2.4s ease-out infinite;
     }
 
     @keyframes status-ping {
-      0%   { box-shadow: 0 0 0 0 rgba(var(--status-rgb), 0.45); }
-      70%  { box-shadow: 0 0 0 4px rgba(var(--status-rgb), 0);  }
-      100% { box-shadow: 0 0 0 0 rgba(var(--status-rgb), 0);    }
+      0%   { transform: scale(1);   opacity: 0.45; }
+      70%  { transform: scale(2.4); opacity: 0;    }
+      100% { transform: scale(2.4); opacity: 0;    }
     }
 
     .status-label {
@@ -317,7 +331,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .status-dot {
+      .status-dot::after {
         animation: none;
       }
     }
@@ -390,17 +404,22 @@
     }
 
     .svc-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      margin-bottom: 0.22rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.3rem;
       color: var(--ink);
       transition: color 0.15s ease;
     }
 
-    .svc:not(.svc-nuitka):hover .svc-title,
-    .svc-main:hover .svc-title,
-    .nk-head:hover .svc-branch-title {
-      color: var(--red);
+    @media (hover: hover) {
+      .svc:not(.svc-nuitka):hover .svc-title,
+      .svc-main:hover .svc-title,
+      .nk-head:hover .svc-branch-title {
+        color: var(--red);
+      }
     }
 
     .svc-nuitka {
@@ -453,8 +472,9 @@
       width: 2px;
       display: block;
       overflow: visible;
-      clip-path: inset(0 -3px 100% -3px);
-      transition: clip-path 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+      transform: scaleY(0);
+      transform-origin: 50% 0;
+      transition: transform 0.8s var(--ease-ios);
     }
 
     .nk-head  .nk-rule { top: -0.55rem; height: calc(100% + 1.65rem); }
@@ -469,7 +489,7 @@
 
     .nk-head.visible  .nk-rule,
     .nk-trace.visible .nk-rule {
-      clip-path: inset(-2px -3px -2px -3px);
+      transform: scaleY(1);
     }
 
     .svc-branch-title {
@@ -523,8 +543,9 @@
       width: 100%;
       height: 100%;
       overflow: visible;
-      clip-path: inset(0 0 100% 0);
-      transition: clip-path 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s;
+      transform: scaleY(0);
+      transform-origin: 50% 0;
+      transition: transform 0.9s var(--ease-ios) 0.2s;
     }
 
     .nk-brace path {
@@ -562,7 +583,7 @@
     .nk-trace.visible .nk-steps li:nth-child(3) { transition-delay: 0.46s; }
 
     .nk-trace.visible .nk-brace {
-      clip-path: inset(-2px -2px -2px -2px);
+      transform: scaleY(1);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -577,6 +598,74 @@
     .tools-section {
       border-bottom: 1px solid var(--line);
       padding-bottom: 2.5rem;
+    }
+
+    .tools-tree {
+      position: relative;
+      padding-left: 1.4rem;
+    }
+
+    .tool-branch {
+      position: relative;
+      padding-bottom: 1.6rem;
+    }
+
+    .tool-branch:last-child {
+      padding-bottom: 0;
+    }
+
+    .tool-branch::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -1.12rem;
+      width: 0;
+      height: 100%;
+      border-left: 1.1px solid var(--maroon);
+      transform: scaleY(0);
+      transform-origin: 50% 0;
+      transition: transform 0.8s var(--ease-ios);
+    }
+
+    .tool-branch:first-child::before {
+      top: 0.8rem;
+      height: calc(100% - 0.8rem);
+    }
+
+    .tool-branch:last-child::before {
+      height: 0.8rem;
+    }
+
+    .tool-branch::after {
+      content: '';
+      position: absolute;
+      top: 0.8rem;
+      left: -1.12rem;
+      width: 0.85rem;
+      height: 0;
+      border-top: 1.1px solid var(--maroon);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+
+    .tool-branch.visible::before {
+      transform: scaleY(1);
+    }
+
+    .tool-branch.visible::after {
+      transform: scaleX(1);
+      transition: transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s;
+    }
+
+    .tool-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 0.65rem;
     }
 
     .tools-row {
@@ -594,15 +683,28 @@
       padding: 0.28rem 0.68rem;
       border-radius: 0.2rem;
       letter-spacing: 0.04em;
-      transition: border-color 0.15s, color 0.15s, background 0.15s;
+      transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.2s var(--ease-ios);
       text-decoration: none;
       cursor: pointer;
       display: inline-block;
     }
 
-    .tag:hover {
-      border-color: var(--ink-muted);
-      color: var(--ink);
+    @media (hover: hover) {
+      .tag:hover {
+        border-color: var(--ink-muted);
+        color: var(--ink);
+      }
+    }
+
+    .tag:active {
+      transform: scale(0.96);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tool-branch::before,
+      .tool-branch::after {
+        transition: none;
+      }
     }
 
     .contact-lead {
@@ -643,13 +745,19 @@
       border: 1px solid var(--line);
       border-radius: 0.25rem;
       background: transparent;
-      transition: border-color 0.15s, background 0.15s, color 0.15s;
+      transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.2s var(--ease-ios);
     }
 
-    .contact-link:hover {
-      border-color: var(--ink-muted);
-      background: var(--page-warm);
-      color: var(--ink);
+    @media (hover: hover) {
+      .contact-link:hover {
+        border-color: var(--ink-muted);
+        background: var(--page-warm);
+        color: var(--ink);
+      }
+    }
+
+    .contact-link:active {
+      transform: scale(0.96);
     }
 
     .contact-link svg {
@@ -734,6 +842,9 @@
       .svc-nuitka + .svc {
         padding-top: 1.6rem;
       }
+      .svc-title {
+        font-size: 1.4rem;
+      }
       .svc-branch-title {
         font-size: 1.3rem;
       }
@@ -746,6 +857,9 @@
       }
       .nk-result {
         font-size: 1.12rem;
+      }
+      .tool-title {
+        font-size: 1.2rem;
       }
     }
 
@@ -887,24 +1001,71 @@
 
     <section class="tools-section">
       <div class="section-head reveal"><h2>Tools & Languages</h2></div>
-      <div class="tools-row reveal" style="--d: 0.05s">
-        <a class="tag" href="https://hex-rays.com/ida-pro"                     target="_blank">IDA Pro</a>
-        <a class="tag" href="https://github.com/NationalSecurityAgency/ghidra" target="_blank">Ghidra</a>
-        <a class="tag" href="https://github.com/x64dbg/x64dbg"                 target="_blank">x64dbg</a>
-        <a class="tag" href="https://github.com/python/cpython"                target="_blank">Python</a>
-        <a class="tag" href="https://gcc.gnu.org"                              target="_blank">C / C++</a>
-        <a class="tag" href="https://github.com/frida/frida"                   target="_blank">Frida</a>
-        <a class="tag" href="https://www.gnu.org/software/binutils"            target="_blank">objdump</a>
-        <a class="tag" href="https://github.com/zrax/pycdc"                    target="_blank">pycdc</a>
-        <a class="tag" href="https://pylingual.io/"                            target="_blank">PyLingual</a>
-        <a class="tag" href="https://docs.python.org/3/library/marshal.html"   target="_blank">Marshal</a>
-        <a class="tag" href="https://github.com/Nuitka/Nuitka"                 target="_blank">Nuitka</a>
-        <a class="tag" href="https://github.com/extremecoders-re/nuitka-extractor" target="_blank">nuitka-extractor</a>
-        <a class="tag" href="https://github.com/python/cpython"                target="_blank">CPython Bytecode</a>
-        <a class="tag" href="https://github.com/pyinstaller/pyinstaller"       target="_blank">PyInstaller</a>
-        <a class="tag" href="https://github.com/rocky/python-uncompyle6"       target="_blank">uncompyle6</a>
-        <a class="tag" href="https://github.com/strace/strace"                 target="_blank">strace</a>
-        <a class="tag" href="https://github.com/rocky/python-xdis"             target="_blank">xdis</a>
+
+      <div class="tools-tree">
+
+        <div class="tool-branch reveal">
+          <p class="tool-title">Disassemblers & Debuggers</p>
+          <div class="tools-row">
+            <a class="tag" href="https://www.sourceware.org/gdb/"                  target="_blank" rel="noopener">GDB</a>
+            <a class="tag" href="https://github.com/NationalSecurityAgency/ghidra" target="_blank" rel="noopener">Ghidra</a>
+            <a class="tag" href="https://github.com/x64dbg/x64dbg"                 target="_blank" rel="noopener">x64dbg</a>
+            <a class="tag" href="https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/" target="_blank" rel="noopener">WinDbg</a>
+            <a class="tag" href="https://hex-rays.com/ida-pro"                     target="_blank" rel="noopener">IDA Pro</a>
+            <a class="tag" href="https://github.com/radareorg/radare2"             target="_blank" rel="noopener">radare2</a>
+            <a class="tag" href="https://www.gnu.org/software/binutils"            target="_blank" rel="noopener">objdump</a>
+            <a class="tag" href="https://binary.ninja"                             target="_blank" rel="noopener">Binary Ninja</a>
+          </div>
+        </div>
+
+        <div class="tool-branch reveal">
+          <p class="tool-title">Dynamic Analysis</p>
+          <div class="tools-row">
+            <a class="tag" href="https://github.com/frida/frida"                   target="_blank" rel="noopener">Frida</a>
+            <a class="tag" href="https://github.com/strace/strace"                 target="_blank" rel="noopener">strace</a>
+            <a class="tag" href="https://www.wireshark.org"                        target="_blank" rel="noopener">Wireshark</a>
+            <a class="tag" href="https://github.com/mitmproxy/mitmproxy"           target="_blank" rel="noopener">mitmproxy</a>
+            <a class="tag" href="https://github.com/kevoreilly/CAPEv2"             target="_blank" rel="noopener">CAPE Sandbox</a>
+            <a class="tag" href="https://learn.microsoft.com/en-us/sysinternals/downloads/procmon" target="_blank" rel="noopener">Process Monitor</a>
+          </div>
+        </div>
+
+        <div class="tool-branch reveal">
+          <p class="tool-title">Triage & Detection</p>
+          <div class="tools-row">
+            <a class="tag" href="https://github.com/upx/upx"                       target="_blank" rel="noopener">UPX</a>
+            <a class="tag" href="https://github.com/VirusTotal/yara"               target="_blank" rel="noopener">YARA</a>
+            <a class="tag" href="https://github.com/mandiant/capa"                 target="_blank" rel="noopener">capa</a>
+            <a class="tag" href="https://github.com/mandiant/flare-floss"          target="_blank" rel="noopener">FLOSS</a>
+            <a class="tag" href="https://github.com/hasherezade/pe-bear"           target="_blank" rel="noopener">PE-bear</a>
+            <a class="tag" href="https://github.com/horsicq/Detect-It-Easy"        target="_blank" rel="noopener">Detect It Easy</a>
+          </div>
+        </div>
+
+        <div class="tool-branch reveal">
+          <p class="tool-title">Python & Packaged Apps</p>
+          <div class="tools-row">
+            <a class="tag" href="https://github.com/rocky/python-xdis"             target="_blank" rel="noopener">xdis</a>
+            <a class="tag" href="https://github.com/zrax/pycdc"                    target="_blank" rel="noopener">pycdc</a>
+            <a class="tag" href="https://github.com/Nuitka/Nuitka"                 target="_blank" rel="noopener">Nuitka</a>
+            <a class="tag" href="https://github.com/rocky/python-uncompyle6"       target="_blank" rel="noopener">uncompyle6</a>
+            <a class="tag" href="https://github.com/rocky/python-decompile3"       target="_blank" rel="noopener">decompyle3</a>
+            <a class="tag" href="https://github.com/pyinstaller/pyinstaller"       target="_blank" rel="noopener">PyInstaller</a>
+            <a class="tag" href="https://github.com/extremecoders-re/pyinstxtractor" target="_blank" rel="noopener">pyinstxtractor</a>
+            <a class="tag" href="https://github.com/extremecoders-re/nuitka-extractor" target="_blank" rel="noopener">nuitka-extractor</a>
+          </div>
+        </div>
+
+        <div class="tool-branch reveal">
+          <p class="tool-title">Languages</p>
+          <div class="tools-row">
+            <a class="tag" href="https://www.python.org"                           target="_blank" rel="noopener">Python</a>
+            <a class="tag" href="https://gcc.gnu.org"                              target="_blank" rel="noopener">C / C++</a>
+            <a class="tag" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a>
+            <a class="tag" href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html" target="_blank" rel="noopener">x86 / x64 ASM</a>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -984,8 +1145,8 @@
 
   <script>
     window.SITE_STATUS = {
-      state: "offline",
-      since: "2026-10-01T05:50:05Z"
+      state: "online",
+      since: "2026-11-01T02:10:05Z"
     };
   </script>
 
@@ -1129,6 +1290,7 @@
     var scrollObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         var el = entry.target;
+
         if (entry.isIntersecting) {
           el.classList.remove('hide-up');
           el.classList.add('visible');
@@ -1141,7 +1303,11 @@
           }
         }
       });
-    }, { threshold: 0.4, rootMargin: '0px 0px -12% 0px' });
+    }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+
+    document.addEventListener('visibilitychange', function () {
+      document.body.classList.toggle('is-paused', document.hidden);
+    });
 
     var fontsReady = Promise.race([
       document.fonts.ready,
