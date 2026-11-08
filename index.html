@@ -16,6 +16,8 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: #e4dfd7 transparent;
     }
 
     :root {
@@ -35,10 +37,29 @@
       --ease-out:       cubic-bezier(0.22, 0.61, 0.36, 1);
       --ease-expo:      cubic-bezier(0.16, 1, 0.3, 1);
       --ease-ios:       cubic-bezier(0.32, 0.72, 0, 1);
+      --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-smooth:    cubic-bezier(0.65, 0, 0.35, 1);
     }
 
     html {
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+
+    html::-webkit-scrollbar { width: 9px; height: 9px; }
+    html::-webkit-scrollbar-track { background: transparent; }
+    html::-webkit-scrollbar-thumb {
+      background: var(--line);
+      border-radius: 999px;
+      border: 2px solid var(--page);
+    }
+    html::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+
+    ::selection {
+      background: var(--maroon-soft);
+      color: var(--maroon);
     }
 
     body {
@@ -47,7 +68,12 @@
       color: var(--ink);
       font-size: 16px;
       line-height: 1.7;
+      letter-spacing: -0.006em;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -61,6 +87,8 @@
       z-index: 0;
       will-change: transform;
       contain: strict;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
 
     .orb-1 {
@@ -91,18 +119,18 @@
     }
 
     @keyframes aura1 {
-      0%   { transform: translate(0, 0)     scale(1);    }
-      100% { transform: translate(8%, 12%)  scale(1.12); }
+      0%   { transform: translate3d(0, 0, 0)         scale(1);    }
+      100% { transform: translate3d(8%, 12%, 0)      scale(1.12); }
     }
 
     @keyframes aura2 {
-      0%   { transform: translate(0, 0)      scale(1);    }
-      100% { transform: translate(-10%, -8%) scale(0.92); }
+      0%   { transform: translate3d(0, 0, 0)         scale(1);    }
+      100% { transform: translate3d(-10%, -8%, 0)    scale(0.92); }
     }
 
     @keyframes aura3 {
-      0%   { transform: translate(0, 0)    scale(1);    }
-      100% { transform: translate(5%, -15%) scale(1.18); }
+      0%   { transform: translate3d(0, 0, 0)         scale(1);    }
+      100% { transform: translate3d(5%, -15%, 0)     scale(1.18); }
     }
 
     @keyframes drift-1 { to { translate: 0 -130px; } }
@@ -173,7 +201,7 @@
     .wrap,
     footer {
       opacity: 0;
-      transition: opacity 0.6s ease;
+      transition: opacity 0.7s var(--ease-out);
     }
 
     body.is-ready .wrap,
@@ -183,7 +211,9 @@
 
     .reveal {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translate3d(0, 20px, 0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       transition:
         opacity   0.4s var(--ease-out),
         transform 0.5s var(--ease-out);
@@ -191,7 +221,7 @@
 
     .reveal.visible {
       opacity: 1;
-      transform: none;
+      transform: translate3d(0, 0, 0);
       transition:
         opacity   0.9s var(--ease-out)  var(--d, 0s),
         transform 1.2s var(--ease-expo) var(--d, 0s);
@@ -199,7 +229,7 @@
 
     .reveal.hide-up {
       opacity: 0;
-      transform: translateY(-12px);
+      transform: translate3d(0, -12px, 0);
       transition: none;
     }
 
@@ -245,6 +275,23 @@
       margin-bottom: 0.75rem;
       color: var(--ink);
       white-space: nowrap;
+      text-wrap: balance;
+      text-shadow: 0 1px 2px rgba(24, 22, 18, 0.04);
+    }
+
+    .section-head h2,
+    .intro-lead,
+    .svc-branch-title,
+    .svc-title,
+    .tool-title,
+    .nk-result,
+    .contact-lead {
+      text-wrap: pretty;
+    }
+
+    .intro-lead,
+    .svc-branch-title {
+      text-wrap: balance;
     }
 
     .designation {
@@ -322,6 +369,7 @@
       background: var(--status-color);
       opacity: 0;
       animation: status-ping 2.4s ease-out infinite;
+      will-change: transform, opacity;
     }
 
     @keyframes status-ping {
@@ -374,17 +422,22 @@
     .lines .ln {
       display: block;
       opacity: 0;
-      transform: translateY(0.45em);
+      transform: translate3d(0, 0.45em, 0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       transition:
         opacity   0.4s var(--ease-out),
         transform 0.5s var(--ease-out);
     }
 
-    .lines.hide-up .ln { transform: translateY(-0.3em); transition: none; }
+    .lines.hide-up .ln {
+      transform: translate3d(0, -0.3em, 0);
+      transition: none;
+    }
 
     .lines.visible .ln {
       opacity: 1;
-      transform: none;
+      transform: translate3d(0, 0, 0);
       transition:
         opacity   0.9s var(--ease-out)  calc(0.05s + var(--n, 0) * 0.12s),
         transform 1.2s var(--ease-expo) calc(0.05s + var(--n, 0) * 0.12s);
@@ -445,7 +498,7 @@
       font-weight: 800;
       margin-bottom: 0.22rem;
       color: var(--ink);
-      transition: color 0.15s ease;
+      transition: color 0.25s var(--ease-out);
     }
 
     @media (hover: hover) {
@@ -470,21 +523,24 @@
       background: var(--line);
     }
 
-    .svc-line.reveal {
+    .svc-line.reveal,
+    .svc-line.reveal.visible,
+    .svc-line.reveal.hide-up {
       opacity: 1;
       transform: none;
+    }
+
+    .svc-line.reveal {
       clip-path: inset(0 100% 0 0);
       transition: clip-path 0.5s var(--ease-out);
     }
 
     .svc-line.reveal.visible {
-      transform: none;
       clip-path: inset(0 0 0 0);
       transition: clip-path 1.1s var(--ease-expo) 0.2s;
     }
 
     .svc-line.reveal.hide-up {
-      transform: none;
       clip-path: inset(0 100% 0 0);
       transition: none;
     }
@@ -506,7 +562,9 @@
       cursor: pointer;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
-      transition: background-color 0.3s var(--ease-out);
+      transition:
+        background-color 0.3s var(--ease-out),
+        transform        0.35s var(--ease-spring);
     }
 
     @media (hover: hover) {
@@ -579,7 +637,7 @@
       letter-spacing: -0.01em;
       color: var(--ink);
       margin-bottom: 0.45rem;
-      transition: color 0.15s ease;
+      transition: color 0.25s var(--ease-out);
     }
 
     .nk-trace {
@@ -603,7 +661,7 @@
       padding: 0.6rem 0;
       border-top: 1px solid var(--line);
       opacity: 0;
-      transform: translateX(-6px);
+      transform: translate3d(-6px, 0, 0);
       transition:
         opacity   0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
         transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -641,7 +699,7 @@
       letter-spacing: -0.01em;
       color: var(--ink);
       opacity: 0;
-      transform: translateX(-6px);
+      transform: translate3d(-6px, 0, 0);
       transition:
         opacity   0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.75s,
         transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.75s;
@@ -650,7 +708,7 @@
     .nk-trace.visible .nk-steps li,
     .nk-trace.visible .nk-result {
       opacity: 1;
-      transform: translateX(0);
+      transform: translate3d(0, 0, 0);
     }
 
     .nk-trace.visible .nk-steps li:nth-child(1) { transition-delay: 0.10s; }
@@ -756,15 +814,19 @@
       padding: 0.28rem 0.68rem;
       border-radius: 0.2rem;
       letter-spacing: 0.04em;
-      transition:
-        border-color 0.3s var(--ease-out),
-        background   0.3s var(--ease-out),
-        color        0.3s var(--ease-out),
-        transform    0.3s var(--ease-out);
       text-decoration: none;
       cursor: pointer;
       display: inline-block;
       touch-action: manipulation;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
+      transition:
+        border-color     0.3s var(--ease-out),
+        background-color 0.3s var(--ease-out),
+        color            0.3s var(--ease-out),
+        transform        0.4s var(--ease-spring),
+        box-shadow       0.4s var(--ease-out);
     }
 
     @media (hover: hover) {
@@ -772,6 +834,8 @@
         border-color: var(--maroon-border);
         background: var(--maroon-soft);
         color: var(--maroon);
+        transform: translate3d(0, -1px, 0);
+        box-shadow: 0 2px 6px rgba(122, 31, 31, 0.06);
       }
     }
 
@@ -836,11 +900,15 @@
       border-radius: 0.25rem;
       background: transparent;
       touch-action: manipulation;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
       transition:
         color            0.3s var(--ease-out),
         border-color     0.3s var(--ease-out),
         background-color 0.3s var(--ease-out),
-        transform        0.3s var(--ease-out);
+        transform        0.4s var(--ease-spring),
+        box-shadow       0.4s var(--ease-out);
     }
 
     .contact-link svg {
@@ -856,6 +924,8 @@
         border-color: var(--ink-muted);
         background: var(--page-warm);
         color: var(--ink);
+        transform: translate3d(0, -1px, 0);
+        box-shadow: 0 2px 6px rgba(24, 22, 18, 0.05);
       }
       .contact-link:hover svg { opacity: 0.8; }
     }
@@ -875,6 +945,7 @@
 
     @keyframes soft-in {
       from { opacity: 0; }
+      to   { opacity: 1; }
     }
 
     .tag:active,
@@ -884,12 +955,16 @@
       background: var(--maroon-soft);
       border-color: var(--maroon-border);
       color: var(--maroon);
-      transform: scale(0.98);
-      transition-duration: 0.12s;
+      transform: scale(0.97);
+      box-shadow: none;
+      transition-duration: 0.1s, 0.1s, 0.1s, 0.1s, 0.1s;
     }
 
     .nk-toggle:active,
-    .nk-toggle.pressed { background: var(--maroon-soft); }
+    .nk-toggle.pressed {
+      background: var(--maroon-soft);
+      transform: scale(0.97);
+    }
 
     .contact-link:active svg,
     .contact-link.pressed svg { opacity: 0.9; }
@@ -1315,6 +1390,7 @@
       var state  = config.state === 'online' ? 'online' : 'offline';
       var since  = Date.parse(config.since);
       var timer  = null;
+      var lastTick = 0;
 
       function pad(n) {
         return String(n).padStart(2, '0');
@@ -1334,15 +1410,24 @@
         time.textContent = elapsed();
       }
 
+      function tick(ts) {
+        if (ts - lastTick >= 1000) {
+          lastTick = ts;
+          render();
+        }
+        timer = requestAnimationFrame(tick);
+      }
+
       function stop() {
-        clearInterval(timer);
+        if (timer) cancelAnimationFrame(timer);
         timer = null;
       }
 
       function start() {
         stop();
         render();
-        timer = setInterval(render, 1000);
+        lastTick = performance.now();
+        timer = requestAnimationFrame(tick);
       }
 
       document.addEventListener('visibilitychange', function () {
