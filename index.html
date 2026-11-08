@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
     rel="stylesheet" />
 
   <style>
@@ -57,10 +57,10 @@
 
     .orb {
       position: fixed;
-      border-radius: 50%;
       pointer-events: none;
       z-index: 0;
       will-change: transform;
+      contain: strict;
     }
 
     .orb-1 {
@@ -153,6 +153,10 @@
       }
     }
 
+    body:not(.is-live) .orb {
+      animation-play-state: paused, running;
+    }
+
     body.is-paused .orb,
     body.is-paused .status-dot::after {
       animation-play-state: paused;
@@ -223,14 +227,13 @@
       background: var(--line);
       flex-shrink: 0;
       display: inline-block;
-      transform: scaleX(0);
-      transform-origin: 0 50%;
-      transition: transform 0.3s ease;
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 0.3s ease;
     }
 
     .eyebrow.visible::before {
-      transform: scaleX(1);
-      transition: transform 1s var(--ease-expo) calc(var(--d, 0s) + 0.25s);
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 1s var(--ease-expo) calc(var(--d, 0s) + 0.25s);
     }
 
     h1 {
@@ -259,20 +262,27 @@
 
     .designation::before {
       content: "";
-      display: inline-block;
+      display: block;
       flex-shrink: 0;
-      width: 2.5px;
-      height: 1.2em;
+      width: 2px;
+      height: 18px;
       border-radius: 999px;
       background: var(--maroon);
-      transform: scaleY(0);
-      transform-origin: 50% 0;
-      transition: transform 0.3s ease;
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 0.3s ease;
+    }
+
+    @media (min-resolution: 2dppx) {
+      .designation::before { width: 2.5px; }
+    }
+
+    @media (min-resolution: 3dppx) {
+      .designation::before { width: 2.667px; }
     }
 
     .designation.visible::before {
-      transform: scaleY(1);
-      transition: transform 0.9s var(--ease-expo) calc(var(--d, 0s) + 0.15s);
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 0.9s var(--ease-expo) calc(var(--d, 0s) + 0.15s);
     }
 
     .status {
@@ -416,14 +426,13 @@
       bottom: 0;
       height: 1px;
       background: var(--line);
-      transform: scaleX(0);
-      transform-origin: 0 50%;
-      transition: transform 0.3s ease;
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 0.3s ease;
     }
 
     .svc.visible::after {
-      transform: scaleX(1);
-      transition: transform 1.1s var(--ease-expo) 0.2s;
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 1.1s var(--ease-expo) 0.2s;
     }
 
     .svc:last-child::after,
@@ -463,17 +472,21 @@
 
     .svc-line.reveal {
       opacity: 1;
-      transform: scaleX(0);
-      transform-origin: 0 50%;
+      transform: none;
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 0.5s var(--ease-out);
     }
 
     .svc-line.reveal.visible {
-      transform: scaleX(1);
-      transition: transform 1.1s var(--ease-expo) 0.2s;
+      transform: none;
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 1.1s var(--ease-expo) 0.2s;
     }
 
     .svc-line.reveal.hide-up {
-      transform: scaleX(0);
+      transform: none;
+      clip-path: inset(0 100% 0 0);
+      transition: none;
     }
 
     .svc-branch {
@@ -535,9 +548,8 @@
       width: 2px;
       display: block;
       overflow: visible;
-      transform: scaleY(0);
-      transform-origin: 50% 0;
-      transition: transform 0.8s var(--ease-ios);
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 0.8s var(--ease-ios);
     }
 
     .nk-head  .nk-rule { top: -0.55rem; height: calc(100% + 1.65rem); }
@@ -552,7 +564,7 @@
 
     .nk-head.visible  .nk-rule,
     .nk-trace.visible .nk-rule {
-      transform: scaleY(1);
+      clip-path: inset(0 0 0 0);
     }
 
     .svc-branch-title {
@@ -685,9 +697,8 @@
       width: 2px;
       height: 100%;
       background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='100%25'%3E%3Cline x1='1' y1='0' x2='1' y2='100%25' stroke='%237a1f1f' stroke-width='1.1'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
-      transform: scaleY(0);
-      transform-origin: 50% 0;
-      transition: transform 0.8s var(--ease-ios);
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 0.8s var(--ease-ios);
     }
 
     .tool-branch:first-child::before {
@@ -707,18 +718,17 @@
       width: 0.85rem;
       height: 2px;
       background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='2'%3E%3Cline x1='0' y1='1' x2='100%25' y2='1' stroke='%237a1f1f' stroke-width='1.1'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
-      transform: scaleX(0);
-      transform-origin: 0 50%;
-      transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
 
     .tool-branch.visible::before {
-      transform: scaleY(1);
+      clip-path: inset(0 0 0 0);
     }
 
     .tool-branch.visible::after {
-      transform: scaleX(1);
-      transition: transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s;
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s;
     }
 
     .tool-title {
@@ -1000,7 +1010,7 @@
       .eyebrow::before,
       .designation::before,
       .svc::after {
-        transform: none;
+        clip-path: none;
         transition: none;
       }
     }
@@ -1010,14 +1020,15 @@
     <style>
       .wrap, footer { opacity: 1; }
       .reveal, .lines .ln { opacity: 1; transform: none; }
-      .svc-line.reveal { transform: none; }
-      .eyebrow::before, .designation::before, .svc::after { transform: none; }
-      .tool-branch::before, .tool-branch::after { transform: none; }
+      .svc-line.reveal { clip-path: none; }
+      .eyebrow::before, .designation::before, .svc::after { clip-path: none; }
+      .tool-branch::before, .tool-branch::after { clip-path: none; }
       .nk-panel { grid-template-rows: 1fr; }
       .nk-panel-inner { visibility: visible; opacity: 1; }
       .nk-toggle { border-bottom: 0; cursor: text; }
       .nk-steps li, .nk-result { opacity: 1; transform: none; }
-      .nk-rule, .nk-brace { transform: none; }
+      .nk-rule { clip-path: none; }
+      .nk-brace { transform: none; }
     </style>
   </noscript>
 </head>
@@ -1488,8 +1499,21 @@
       });
     })();
 
+    var fontFaces = [
+      '700 1em "Cormorant Garamond"',
+      '400 1em "Inter"',
+      '500 1em "Inter"',
+      '400 1em "JetBrains Mono"'
+    ];
+
+    var fontsLoaded = document.fonts
+      ? Promise.all(fontFaces.map(function (face) {
+          return document.fonts.load(face).catch(function () {});
+        })).then(function () { return document.fonts.ready; })
+      : Promise.resolve();
+
     var fontsReady = Promise.race([
-      document.fonts.ready,
+      fontsLoaded,
       new Promise(function (resolve) { setTimeout(resolve, 2500); })
     ]);
 
@@ -1500,6 +1524,9 @@
           scrollObserver.observe(element);
         });
       });
+      setTimeout(function () {
+        document.body.classList.add('is-live');
+      }, 1800);
     });
   </script>
 
