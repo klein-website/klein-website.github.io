@@ -69,7 +69,6 @@
       font-size: 16px;
       line-height: 1.7;
       letter-spacing: -0.006em;
-      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
@@ -174,7 +173,7 @@
       }
     }
 
-    @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion: reduce), (max-width: 560px), (hover: none) and (pointer: coarse) {
       .orb {
         animation: none;
         will-change: auto;
@@ -595,6 +594,11 @@
       transition: opacity 0.6s var(--ease-out) 0.1s, visibility 0s;
     }
 
+    .nk-instant,
+    .nk-instant * {
+      transition: none !important;
+    }
+
     .nk-head,
     .nk-trace {
       position: relative;
@@ -818,9 +822,6 @@
       cursor: pointer;
       display: inline-block;
       touch-action: manipulation;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transform: translateZ(0);
       transition:
         border-color     0.3s var(--ease-out),
         background-color 0.3s var(--ease-out),
@@ -900,9 +901,6 @@
       border-radius: 0.25rem;
       background: transparent;
       touch-action: manipulation;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transform: translateZ(0);
       transition:
         color            0.3s var(--ease-out),
         border-color     0.3s var(--ease-out),
@@ -1390,7 +1388,6 @@
       var state  = config.state === 'online' ? 'online' : 'offline';
       var since  = Date.parse(config.since);
       var timer  = null;
-      var lastTick = 0;
 
       function pad(n) {
         return String(n).padStart(2, '0');
@@ -1410,24 +1407,19 @@
         time.textContent = elapsed();
       }
 
-      function tick(ts) {
-        if (ts - lastTick >= 1000) {
-          lastTick = ts;
-          render();
-        }
-        timer = requestAnimationFrame(tick);
+      function tick() {
+        render();
+        timer = setTimeout(tick, 1000 - (Date.now() % 1000));
       }
 
       function stop() {
-        if (timer) cancelAnimationFrame(timer);
+        clearTimeout(timer);
         timer = null;
       }
 
       function start() {
         stop();
-        render();
-        lastTick = performance.now();
-        timer = requestAnimationFrame(tick);
+        tick();
       }
 
       document.addEventListener('visibilitychange', function () {
@@ -1500,6 +1492,7 @@
     });
 
     var revealEls = document.querySelectorAll('.reveal, .lines');
+    var ONE_SHOT  = '.tool-branch';
 
     var scrollObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -1509,6 +1502,7 @@
         if (ratio >= 0.15) {
           el.classList.remove('hide-up');
           el.classList.add('visible');
+          if (el.closest(ONE_SHOT)) scrollObserver.unobserve(el);
         } else if (ratio === 0) {
           el.classList.remove('visible');
           if (entry.boundingClientRect.top < 0) {
@@ -1528,9 +1522,16 @@
       var toggle = document.querySelector('.nk-toggle');
       if (!toggle) return;
 
-      var item  = toggle.closest('.svc-nuitka');
-      var parts = item.querySelectorAll('.nk-head, .nk-trace');
-      var isOpen = false;
+      var root       = document.documentElement;
+      var item       = toggle.closest('.svc-nuitka');
+      var parts      = item.querySelectorAll('.nk-head, .nk-trace');
+      var isOpen     = false;
+      var closeTimer = null;
+      var lastScroll = 0;
+
+      function noteScroll() {
+        lastScroll = Date.now();
+      }
 
       function setOpen(next) {
         if (isOpen === next) return;
@@ -1540,6 +1541,52 @@
         parts.forEach(function (el) {
           el.classList.toggle('visible', isOpen);
         });
+        if (isOpen) {
+          window.addEventListener('scroll', noteScroll, { passive: true });
+        } else {
+          window.removeEventListener('scroll', noteScroll);
+        }
+      }
+
+      function closeSilently(above) {
+        var before = item.offsetHeight;
+
+        item.classList.add('nk-instant');
+        root.style.overflowAnchor = 'none';
+        setOpen(false);
+
+        if (above) {
+          var delta = before - item.offsetHeight;
+          if (delta > 0) {
+            root.style.scrollBehavior = 'auto';
+            window.scrollBy(0, -delta);
+            root.style.scrollBehavior = '';
+          }
+        }
+
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            item.classList.remove('nk-instant');
+            root.style.overflowAnchor = '';
+          });
+        });
+      }
+
+      function closeWhenSettled() {
+        closeTimer = null;
+        if (!isOpen) return;
+
+        if (Date.now() - lastScroll < 120) {
+          closeTimer = setTimeout(closeWhenSettled, 120);
+          return;
+        }
+
+        var rect = item.getBoundingClientRect();
+        if (rect.bottom <= 0) {
+          closeSilently(true);
+        } else if (rect.top >= window.innerHeight) {
+          closeSilently(false);
+        }
       }
 
       toggle.addEventListener('click', function () {
@@ -1550,7 +1597,9 @@
 
       var foldObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
-          if (!entry.isIntersecting) setOpen(false);
+          if (!entry.isIntersecting && isOpen && !closeTimer) {
+            closeTimer = setTimeout(closeWhenSettled, 160);
+          }
         });
       }, { threshold: 0, rootMargin: '0px' });
 
